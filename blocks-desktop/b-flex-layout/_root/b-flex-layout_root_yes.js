@@ -16,7 +16,13 @@ BEM.DOM.decl({ block : 'b-flex-layout', modName : 'root', modVal : 'yes' }, {
 
     recalc : function() {
 
-        var elemsData = this._recalcPanels(this.__self.getWindowSize());
+        var winSize = this.__self.getWindowSize(),
+            minSize = this._getMinSize(),
+            elemsData = this._recalcPanels({
+                width  : Math.max(winSize.width, minSize.width),
+                height : Math.max(winSize.height, minSize.height)
+            });
+
         elemsData.forEach(function(elemData) {
             elemData.elem.css(elemData.css);
         });

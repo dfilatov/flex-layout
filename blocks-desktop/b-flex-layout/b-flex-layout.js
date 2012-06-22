@@ -92,13 +92,16 @@ BEM.DOM.decl('b-flex-layout', {
             countFlexiblePanel = 0;
 
         this._panelsParams.forEach(function(params) {
+            params.minSize = params.childLayout &&
+                params.childLayout._getMinSize()[props.size] || params[props.minSize];
+
             switch(params.type) {
                 case 'fixed':
                     flexibleSize -= (params.size = params[props.size]);
                 break;
                 case 'percent':
                     flexibleSize -= (params.size = Math.max(
-                        params[props.minSize],
+                        params.minSize,
                         Math.ceil(params[props.size] * fullSize / 100)));
                 break;
                 default:
@@ -108,37 +111,47 @@ BEM.DOM.decl('b-flex-layout', {
         });
 
         var flexiblePanelSize = countFlexiblePanel > 1? Math.floor(flexibleSize / countFlexiblePanel) : flexibleSize,
-            flexibleReserve = countFlexiblePanel? flexibleSize % countFlexiblePanel : 0;
+            flexiblePanelsParams = [];
 
         this._panelsParams.forEach(function(params) {
-            params.minSize = params.childLayout &&
-                params.childLayout._getMinSize()[props.size] || params[props.minSize];
-
             if(params.type === 'flexible') {
-                flexibleReserve += flexiblePanelSize - params.minSize;
+                flexiblePanelsParams.push(params);
             }
         });
 
-        var flexibleAdding = countFlexiblePanel? Math.floor(flexibleReserve / countFlexiblePanel) : 0,
-            offset = 0,
-            panelsData = [];
-
-        this._panelsParams.forEach(function(params) {
-            var size = params.size; // it may be be calculated on previous steps
-
-            if(!size) {
-                size = params.minSize;
-                if(flexibleReserve > 0) {
-                    size += countFlexiblePanel-- > 1? flexibleAdding : flexibleReserve;
-                    flexibleReserve -= flexibleAdding;
-                }
+        if(countFlexiblePanel) {
+            if(countFlexiblePanel > 1) {
+                flexiblePanelsParams
+                    .sort(function(params1, params2) {
+                        return params2.minSize - params1.minSize;
+                    })
+                    .forEach(function(params, i) {
+                        if((params.size = params.minSize) > flexiblePanelSize) {
+                            flexibleSize -= params.size;
+                            flexiblePanelSize = Math.floor(flexibleSize / (countFlexiblePanel - i - 1));
+                        }
+                        else {
+                            i === countFlexiblePanel - 1?
+                                params.size = flexibleSize :
+                                flexibleSize -= (params.size = flexiblePanelSize);
+                        }
+                    });
             }
+            else {
+                flexiblePanelsParams[0].size = flexibleSize;
+            }
+        }
+
+        var offset = 0,
+            res = [];
+        this._panelsParams.forEach(function(params) {
+            var size = params.size;
 
             if(params.childLayout) {
-                panelsData = panelsData.concat(params.childLayout._recalcPanels(
+                res = res.concat(params.childLayout._recalcPanels(
                     props.size === 'height'?
-                    { width : parentSize.width, height : size } :
-                    { width : size, height : parentSize.height }));
+                        { width : parentSize.width, height : size } :
+                        { width : size, height : parentSize.height }));
             }
 
             if(size !== params.lastSize || offset !== params.lastOffset) { // optimizing
@@ -147,13 +160,13 @@ BEM.DOM.decl('b-flex-layout', {
                 size !== params.lastSize && (css[props.size] = params.lastSize = size);
                 offset !== params.lastOffset && (css[props.offset] = params.lastOffset = offset);
 
-                panelsData.push({ elem : params.elem, css : css });
+                res.push({ elem : params.elem, css : css });
             }
 
             offset += size;
         });
 
-        return panelsData;
+        return res;
 
     },
 
@@ -175,16 +188,19 @@ BEM.DOM.decl('b-flex-layout', {
             res = { width : 0, height : 0 };
 
         this._panelsParams.forEach(function(params) {
+            var selfMinWidth = params.type === 'fixed'? params.width : params.minWidth,
+                selfMinHeight = params.type === 'fixed'? params.height : params.minHeight;
+
             if(params.childLayout) {
                 var childMinSize = params.childLayout._getMinSize();
-                res.width += childMinSize.width;
-                res.height += childMinSize.height;
+                res.width += Math.max(childMinSize.width, selfMinWidth);
+                res.height += Math.max(childMinSize.height, selfMinHeight);
             }
             else if(props.size === 'height') {
-                res.height += params.type === 'fixed'? params.height : params.minHeight;
+                res.height += selfMinHeight;
             }
             else {
-                res.width += params.type === 'fixed'? params.width : params.minWidth;
+                res.width += selfMinWidth;
             }
         });
 
