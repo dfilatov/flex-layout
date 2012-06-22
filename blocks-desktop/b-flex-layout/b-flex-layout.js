@@ -97,7 +97,9 @@ BEM.DOM.decl('b-flex-layout', {
                     flexibleSize -= (params.size = params[props.size]);
                 break;
                 case 'percent':
-                    flexibleSize -= (params.size = Math.max(params[props.minSize], Math.ceil(params[props.size] * fullSize / 100)));
+                    flexibleSize -= (params.size = Math.max(
+                        params[props.minSize],
+                        Math.ceil(params[props.size] * fullSize / 100)));
                 break;
                 default:
                     delete params.size;
@@ -109,30 +111,23 @@ BEM.DOM.decl('b-flex-layout', {
             flexibleReserve = countFlexiblePanel? flexibleSize % countFlexiblePanel : 0;
 
         this._panelsParams.forEach(function(params) {
+            params.minSize = params.childLayout &&
+                params.childLayout._getMinSize()[props.size] || params[props.minSize];
+
             if(params.type === 'flexible') {
-                var minSize = params.childLayout?
-                    params.childLayout._getMinSize()[props.size] || params[props.minSize] :
-                    params[props.minSize];
-                flexibleReserve += flexiblePanelSize - minSize;
+                flexibleReserve += flexiblePanelSize - params.minSize;
             }
         });
 
         var flexibleAdding = countFlexiblePanel? Math.floor(flexibleReserve / countFlexiblePanel) : 0,
             offset = 0,
-            panelsData = [],
-            panels = this._panels;
+            panelsData = [];
 
-        this._panelsParams.forEach(function(params, i) {
-            var minSize = params.childLayout?
-                    params.childLayout._getMinSize()[props.size] || params[props.minSize] :
-                    params[props.minSize],
-                size;
+        this._panelsParams.forEach(function(params) {
+            var size = params.size; // it may be be calculated on previous steps
 
-            if(params.size) { // значит уже вычислили на предыдущих шагах
-                size = params.size;
-            }
-            else {
-                size = minSize;
+            if(!size) {
+                size = params.minSize;
                 if(flexibleReserve > 0) {
                     size += countFlexiblePanel-- > 1? flexibleAdding : flexibleReserve;
                     flexibleReserve -= flexibleAdding;
@@ -142,14 +137,8 @@ BEM.DOM.decl('b-flex-layout', {
             if(params.childLayout) {
                 panelsData = panelsData.concat(params.childLayout._recalcPanels(
                     props.size === 'height'?
-                    {
-                        width  : parentSize.width,
-                        height : size
-                    } :
-                    {
-                        width  : size,
-                        height : parentSize.height
-                    }));
+                    { width : parentSize.width, height : size } :
+                    { width : size, height : parentSize.height }));
             }
 
             if(size !== params.lastSize || offset !== params.lastOffset) { // optimizing
@@ -158,7 +147,7 @@ BEM.DOM.decl('b-flex-layout', {
                 size !== params.lastSize && (css[props.size] = params.lastSize = size);
                 offset !== params.lastOffset && (css[props.offset] = params.lastOffset = offset);
 
-                panelsData.push({ elem : $(panels[i]), css : css });
+                panelsData.push({ elem : params.elem, css : css });
             }
 
             offset += size;
