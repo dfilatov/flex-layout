@@ -1,0 +1,16 @@
+.flex-layout__panel
+{
+    position: absolute;
+}
+
+.flex-layout_orient_vert>.flex-layout__panel
+{
+    left: 0;
+    width: 100%;
+}
+
+.flex-layout_orient_horiz>.flex-layout__panel
+{
+    top: 0;
+    height: 100%;
+}

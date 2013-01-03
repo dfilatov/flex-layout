@@ -1,21 +1,18 @@
-BEM.DOM.decl({ block : 'b-flex-layout', modName : 'root', modVal : 'yes' }, {
+BEM.DOM.decl({ block : 'flex-layout', modName : 'root', modVal : 'yes' }, {
     onSetMod : {
         'js' : {
             'inited' : function() {
-
                 this.__base.apply(this, arguments);
                 this.afterCurrentEvent(function() {
                     this
                         .bindToWin('resize', this.recalc)
                         .recalc();
                 });
-
             }
         }
     },
 
     recalc : function() {
-
         var winSize = this.__self.getWindowSize(),
             minSize = this._getMinSize(),
             elemsData = this._recalcPanels({
@@ -26,9 +23,12 @@ BEM.DOM.decl({ block : 'b-flex-layout', modName : 'root', modVal : 'yes' }, {
         elemsData.forEach(function(elemData) {
             elemData.elem.css(elemData.css);
         });
-
     },
 
     _addToParent : function() {},
-    _removeFromParent : function() {}
+    _removeFromParent : function() {},
+
+    _invalidate : function() {
+        this.recalc();
+    }
 });
