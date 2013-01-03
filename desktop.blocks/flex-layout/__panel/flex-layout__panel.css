@@ -1,6 +1,12 @@
 .flex-layout__panel
 {
     position: absolute;
+    z-index: 1;
+}
+
+.flex-layout__panel_id_center
+{
+    background: #fff;
 }
 
 .flex-layout_orient_vert>.flex-layout__panel

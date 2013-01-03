@@ -100,12 +100,10 @@ BEM.DOM.decl('flex-layout', {
                 this._getPanelMaxSize(primaryPanel)[props.size],
                 Math.max(
                     this._getPanelMinSize(primaryPanel)[props.size],
-                    Math.ceil(primaryPanel.size * fullSize)));
+                    Math.ceil(primaryPanel.size * fullSize)),
+                fullSize - secondaryMinSize);
 
         sizes.secondary = fullSize - sizes.primary;
-        if(sizes.secondary < secondaryMinSize) {
-            sizes.primary = fullSize - (sizes.secondary = secondaryMinSize);
-        }
 
         var offset = 0,
             res = [],
@@ -216,12 +214,14 @@ BEM.DOM.decl('flex-layout', {
         this._mouseDownInvertFactor = Object.keys(this._panels)[0] === 'primary'? 1 : -1;
 
         this.bindToDoc({
-            mousemove : this._onMouseMove,
-            mouseup   : this._onMouseUp
+            mousemove : this._onSplitterMouseMove,
+            mouseup   : this._onSplitterMouseUp
         });
+
+        this.setMod(this._splitter, 'active', 'yes');
     },
 
-    _onMouseMove : function(e) {
+    _onSplitterMouseMove : function(e) {
         var props = this._getCalcProps(),
             newMouseOffset = e[props.mouseOffset],
             primaryPanel = this._panels.primary,
@@ -230,27 +230,23 @@ BEM.DOM.decl('flex-layout', {
             primaryMinSize = this._getPanelMinSize(primaryPanel)[props.size],
             primaryMaxSize = this._getPanelMaxSize(primaryPanel)[props.size],
             secondaryMinSize = this._getPanelMinSize(secondaryPanel)[props.size],
-            newPrimarySize = this._mouseDownPrimarySize +
-                (newMouseOffset - this._mouseOffset) * this._mouseDownInvertFactor;
-
-        if(newPrimarySize < primaryMinSize) {
-            newPrimarySize = primaryMinSize;
-        }
-        else if(newPrimarySize > primaryMaxSize) {
-            newPrimarySize = primaryMaxSize;
-        }
-
-        if(newPrimarySize + secondaryMinSize > fullSize) {
-            newPrimarySize = fullSize - secondaryMinSize;
-        }
+            newPrimarySize = Math.min(
+                Math.max(
+                    this._mouseDownPrimarySize +
+                        (newMouseOffset - this._mouseOffset) * this._mouseDownInvertFactor,
+                    primaryMinSize),
+                primaryMaxSize,
+                fullSize - secondaryMinSize);
 
         primaryPanel.size = newPrimarySize * this._mouseDownPrimarySizeFactor;
 
         this._invalidate();
     },
 
-    _onMouseUp : function() {
-        this.unbindFromDoc('mousemove mouseup');
+    _onSplitterMouseUp : function() {
+        this
+            .unbindFromDoc('mousemove mouseup')
+            .delMod(this._splitter, 'active');
     },
 
     destruct : function() {

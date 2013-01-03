@@ -1,0 +1,61 @@
+.flex-layout_root_yes
+{
+    background: #f5f5f5;
+
+    -webkit-transition: all .5s;
+    transition: all .5s;
+
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+
+.flex-layout_root_yes.flex-layout_js_inited
+{
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+.flex-layout__panel_id_left
+{
+    background: #ddd;
+}
+
+.flex-layout__panel_id_bottom
+{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+
+    border-top: 1px solid #c4c4c4;
+}
+
+.flex-layout__splitter
+{
+    background: #ddd;
+    border: 0 solid #b4b4b4;
+
+    -webkit-transition: box-shadow .3s;
+    transition: box-shadow .3s;
+}
+
+.flex-layout__splitter_active_yes
+{
+    box-shadow: 1px 0 2px rgba(255, 219, 79, .3), -1px 0 2px rgba(255, 219, 79, .3);
+}
+
+.flex-layout_orient_vert>.flex-layout__splitter
+{
+    height: 2px;
+
+    margin-top: -2px;
+
+    border-width: 1px 0;
+}
+
+.flex-layout_orient_horiz>.flex-layout__splitter
+{
+    width: 2px;
+
+    margin-left: -2px;
+
+    border-width: 0 1px;
+}
