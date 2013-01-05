@@ -8,6 +8,7 @@ BEM.DOM.decl('flex-layout', {
                 _this._panels = {};
                 _this._splitter = null;
                 _this._isPrimaryFull = _this.hasMod('primary', 'full');
+                _this._isAnimated = false;
 
                 _this.domElem.children().each(function(i, node) {
                     var elem = $(node);
@@ -41,6 +42,7 @@ BEM.DOM.decl('flex-layout', {
 
         'primary' : function(_, modVal) {
             this._isPrimaryFull = modVal === 'full';
+            this._isAnimated = true;
             this._invalidate();
         }
     },
@@ -150,6 +152,14 @@ BEM.DOM.decl('flex-layout', {
 
             hidden || (offset += size);
         });
+
+        if(_this._isAnimated) {
+            _this._isAnimated = false;
+            _this.setMod('animated', 'yes');
+        }
+        else {
+            _this.delMod('animated');
+        }
 
         return res;
     },

@@ -15,3 +15,9 @@
     top: 0;
     height: 100%;
 }
+
+.flex-layout_animated_yes .flex-layout__panel
+{
+    -webkit-transition: left .5s, width .5s, top .5s, height .5s;
+    transition: left .5s, width .5s, top .5s, height .5s;
+}

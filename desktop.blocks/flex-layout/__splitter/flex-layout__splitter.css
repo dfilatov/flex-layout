@@ -26,5 +26,11 @@
 
 .flex-layout_primary_full>.flex-layout__splitter
 {
-    display: none;
+    visibility: hidden;
+}
+
+.flex-layout_animated_yes .flex-layout__splitter
+{
+    -webkit-transition: left .5s, top .5s;
+    transition: left .5s, top .5s;
 }
