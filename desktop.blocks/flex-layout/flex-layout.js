@@ -235,12 +235,12 @@ BEM.DOM.decl('flex-layout', {
             secondaryPanel.size / secondaryPanel.lastSize;
         this._mouseDownInvertFactor = Object.keys(this._panels)[0] === 'secondary'? 1 : -1;
 
-        this.bindToDoc({
-            mousemove : this._onSplitterMouseMove,
-            mouseup   : this._onSplitterMouseUp
-        });
-
-        this.setMod(this._splitter, 'active', 'yes');
+        this
+            .bindToDoc({
+                mousemove : this._onSplitterMouseMove,
+                mouseup   : this._onSplitterMouseUp
+            })
+            .setMod(this._splitter, 'active', 'yes');
     },
 
     _onSplitterMouseMove : function(e) {

@@ -36,6 +36,7 @@
     border-left-width: 1px;
 }
 
+.flex-layout_primary_full>.flex-layout__panel,
 .flex-layout>.flex-layout__panel:first-of-type
 {
     border: 0;
@@ -43,11 +44,10 @@
 
 .flex-layout__splitter
 {
-    background: #ddd;
-    border: 0 solid #b4b4b4;
+    background-color: #b4b4b4;
 
-    -webkit-transition: box-shadow .2s;
-    transition: box-shadow .2s;
+    -webkit-transition: box-shadow .2s, background-color .2s;
+    transition: box-shadow .2s, background-color .2s;
 }
 
 .flex-layout__splitter_active_yes
@@ -55,22 +55,20 @@
     box-shadow: 1px 0 2px rgba(255, 219, 79, .4), -1px 0 2px rgba(255, 219, 79, .4);
 }
 
+.flex-layout__splitter:hover,
+.flex-layout__splitter_active_yes
+{
+    background-color: #949494;
+}
+
 .flex-layout_orient_vert>.flex-layout__splitter
 {
-    height: 2px;
-
-    margin-top: -2px;
-
-    border-width: 1px 0;
+    height: 1px;
 }
 
 .flex-layout_orient_horiz>.flex-layout__splitter
 {
-    width: 2px;
-
-    margin-left: -2px;
-
-    border-width: 0 1px;
+    width: 1px;
 }
 
 /* custom backgrounds */
