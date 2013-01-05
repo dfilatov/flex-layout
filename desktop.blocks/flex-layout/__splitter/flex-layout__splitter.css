@@ -23,3 +23,8 @@
 
     cursor: col-resize;
 }
+
+.flex-layout_primary_full>.flex-layout__splitter
+{
+    display: none;
+}

@@ -18,7 +18,7 @@
             { elem: 'splitter' },
             {
                 elem: 'panel',
-                mods: { id: 'middle' },
+                mods: { primary: 'yes', id: 'middle' },
                 js: { minHeight: 100 },
                 content: {
                     block: 'flex-layout',
@@ -28,12 +28,13 @@
                         { elem: 'splitter' },
                         {
                             elem: 'panel',
+                            mods: { primary : 'yes' },
                             js: { minWidth: 300 },
                             content: {
                                 block: 'flex-layout',
                                 mods: { orient: 'vert' },
                                 content: [
-                                    { elem: 'panel', mods: { id: 'center' }, js: { minHeight: 100 }},
+                                    { elem: 'panel', mods: { primary: 'yes', id: 'center' }, js: { minHeight: 100 }},
                                     { elem: 'panel', mods: { id: 'bottom' }, js: { size: '30%' }}
                                 ]
                             }
@@ -43,4 +44,39 @@
             }
         ]
     }
+//    content: {
+//        block: 'flex-layout',
+//        mods: { orient: 'vert', root: 'yes' },
+//        content: [
+//            {
+//                elem: 'panel',
+//                mods: { id: 'top' },
+//                js: { size: '50%' },
+//                elem: 'panel',
+//                content: {
+//                    block: 'flex-layout',
+//                    mods: { orient: 'horiz'},
+//                    content: [
+//                        { elem: 'panel', js: { size: '50%' }},
+//                        { elem: 'splitter' },
+//                        { elem: 'panel', mods: { primary : 'yes' }}
+//                    ]
+//                }
+//            },
+//            { elem: 'splitter' },
+//            {
+//                elem: 'panel',
+//                mods: { primary: 'yes', id: 'middle' },
+//                content: {
+//                    block: 'flex-layout',
+//                    mods: { orient: 'horiz'},
+//                    content: [
+//                        { elem: 'panel', js: { size: '50%' }},
+//                        { elem: 'splitter' },
+//                        { elem: 'panel', mods: { primary : 'yes' }}
+//                    ]
+//                }
+//            }
+//        ]
+//    }
 })

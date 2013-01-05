@@ -19,25 +19,26 @@
 
 .flex-layout__panel
 {
-    background: #f5f5f5;
-}
-
-.flex-layout__panel:first-of-type
-{
     box-sizing: border-box;
     -moz-box-sizing: border-box;
 
+    background: #f5f5f5;
     border: 0 solid #c4c4c4;
 }
 
-.flex-layout_orient_vert>.flex-layout__panel:first-of-type
+.flex-layout_orient_vert>.flex-layout__panel
 {
-    border-bottom-width: 1px;
+    border-top-width: 1px;
 }
 
-.flex-layout_orient_horiz>.flex-layout__panel:first-of-type
+.flex-layout_orient_horiz>.flex-layout__panel
 {
-    border-right-width: 1px;
+    border-left-width: 1px;
+}
+
+.flex-layout>.flex-layout__panel:first-of-type
+{
+    border: 0;
 }
 
 .flex-layout__splitter

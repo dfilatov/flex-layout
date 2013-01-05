@@ -2,53 +2,63 @@ BEM.DOM.decl('flex-layout', {
     onSetMod : {
         'js' : {
             'inited' : function() {
-                var children = this.domElem.children(),
-                    panelElems = children.filter(this.__self.buildSelector('panel')),
-                    splitterElem = children.filter(this.__self.buildSelector('splitter'));
+                var _this = this,
+                    _self = _this.__self;
 
-                this._panels = this._buildPanels(panelElems);
-                this._splitter = splitterElem.length? splitterElem : null;
+                _this._panels = {};
+                _this._splitter = null;
+                _this._isPrimaryFull = _this.hasMod('primary', 'full');
+
+                _this.domElem.children().each(function(i, node) {
+                    var elem = $(node);
+
+                    if(elem.is(_self.buildSelector('panel'))) {
+                        var panel = _this._buildPanel(elem),
+                            kind = _this.hasMod(elem, 'primary')? 'primary' : 'secondary';
+
+                        if(_this._panels[kind]) {
+                            throw kind + ' panel should be the only one';
+                        }
+
+                        _this._panels[kind] = panel;
+                    }
+                    else if(elem.is(_self.buildSelector('splitter'))) {
+                        _this._splitter = elem;
+                    }
+                });
+
+                if(!_this._panels.primary) {
+                    throw 'can\'t find primary panel';
+                }
+
+                if(!_this._panels.secondary) {
+                    throw 'can\'t find secondary panel';
+                }
+
                 this._parent = this._addToParent();
             }
+        },
+
+        'primary' : function(_, modVal) {
+            this._isPrimaryFull = modVal === 'full';
+            this._invalidate();
         }
     },
 
-    _buildPanels : function(panelElems) {
-        var _this = this,
-            res = {};
+    _buildPanel : function(elem) {
+        var elemParams = this.elemParams(elem),
+            res = {
+                elem      : elem,
+                minWidth  : elemParams.minWidth,
+                maxWidth  : elemParams.maxWidth,
+                minHeight : elemParams.minHeight,
+                maxHeight : elemParams.maxHeight
+            };
 
-        panelElems.each(function(i, node) {
-            var elem = $(node),
-                elemParams = _this.elemParams(elem),
-                params = {
-                    elem      : elem,
-                    minWidth  : elemParams.minWidth,
-                    maxWidth  : elemParams.maxWidth,
-                    minHeight : elemParams.minHeight,
-                    maxHeight : elemParams.maxHeight
-                };
-
-            if(elemParams.size) {
-                params.type = elemParams.size.toString().indexOf('%') > -1? 'percent' : 'fixed';
-                params.size = parseInt(elemParams.size, 10);
-                params.type === 'percent' && (params.size /= 100);
-            }
-
-            var kind = elemParams.size? 'primary' : 'secondary';
-
-            if(res[kind]) {
-                throw kind + ' panel should be the only one';
-            }
-
-            res[kind] = params;
-        });
-
-        if(!res.primary) {
-            throw 'can\'t find primary panel';
-        }
-
-        if(!res.secondary) {
-            throw 'can\'t find secondary panel';
+        if(elemParams.size) {
+            res.type = elemParams.size.toString().indexOf('%') > -1? 'percent' : 'fixed';
+            res.size = parseInt(elemParams.size, 10);
+            res.type === 'percent' && (res.size /= 100);
         }
 
         return res;
@@ -87,44 +97,47 @@ BEM.DOM.decl('flex-layout', {
     },
 
     _recalcPanels : function(parentSizes) {
-        var props = this._getCalcProps(),
+        var _this = this,
+            props = _this._getCalcProps(),
             fullSize = parentSizes[props.size],
-            primaryPanel = this._panels.primary,
-            secondaryPanel = this._panels.secondary,
-            secondaryMinSize = this._getPanelMinSize(secondaryPanel)[props.size],
+            secondaryPanel = _this._panels.secondary,
+            primaryPanel = _this._panels.primary,
+            primaryMinSize = _this._getPanelMinSize(primaryPanel)[props.size],
             sizes = {};
 
-        sizes.primary = primaryPanel.type === 'fixed'?
-            primaryPanel.size :
-            Math.min(
-                this._getPanelMaxSize(primaryPanel)[props.size],
+        sizes.secondary = Math.min(
+            secondaryPanel.type === 'fixed'?
+                secondaryPanel.size :
                 Math.max(
-                    this._getPanelMinSize(primaryPanel)[props.size],
-                    Math.ceil(primaryPanel.size * fullSize)),
-                fullSize - secondaryMinSize);
+                    _this._getPanelMinSize(secondaryPanel)[props.size],
+                    Math.ceil(secondaryPanel.size * fullSize)),
+            _this._getPanelMaxSize(secondaryPanel)[props.size],
+            fullSize - primaryMinSize);
 
-        sizes.secondary = fullSize - sizes.primary;
+        sizes.primary = _this._isPrimaryFull? fullSize : fullSize - sizes.secondary;
 
         var offset = 0,
-            res = [],
-            _this = this;
+            res = [];
 
         Object.keys(_this._panels).forEach(function(kind, i) {
             var panel = _this._panels[kind],
-                size = sizes[kind];
+                size = sizes[kind],
+                hidden = _this._isPrimaryFull && kind === 'secondary';
 
-            if(panel.childLayout) {
+            if(panel.childLayout && !hidden) {
                 res = res.concat(panel.childLayout._recalcPanels(
                     props.size === 'height'?
                         { width : parentSizes.width, height : size } :
                         { width : size, height : parentSizes.height }));
             }
 
-            if(size !== panel.lastSize || offset !== panel.lastOffset) { // optimizing
+            if(size !== panel.lastSize || offset !== panel.lastOffset || panel.hidden !== hidden) { // optimizing
+                panel.hidden = hidden;
+
                 var css = {};
 
                 css[props.size] = panel.lastSize = size;
-                css[props.offset] = panel.lastOffset = offset;
+                css[props.offset] = panel.lastOffset = hidden? i? fullSize : -size : offset;
 
                 res.push({ elem : panel.elem, css : css });
 
@@ -135,7 +148,7 @@ BEM.DOM.decl('flex-layout', {
                 }
             }
 
-            offset += size;
+            hidden || (offset += size);
         });
 
         return res;
@@ -144,8 +157,8 @@ BEM.DOM.decl('flex-layout', {
     _getCalcProps : function() {
         return this._calcProps || (this._calcProps =
             this.hasMod('orient', 'vert')?
-                { size : 'height', offset : 'top', mouseOffset : 'clientY' } :
-                { size : 'width', offset : 'left', mouseOffset : 'clientX' });
+                { size : 'height', offset : 'top', translateOffset : 'translateY', mouseOffset : 'clientY' } :
+                { size : 'width', offset : 'left', translateOffset : 'translateX', mouseOffset : 'clientX' });
     },
 
     _getMinSize : function() {
@@ -158,8 +171,15 @@ BEM.DOM.decl('flex-layout', {
 
         Object.keys(_this._panels).forEach(function(kind) {
             var panelMinSize = _this._getPanelMinSize(_this._panels[kind]);
-            res.width += panelMinSize.width;
-            res.height += panelMinSize.height;
+
+            if(_this.hasMod('orient', 'vert')) {
+                res.width = Math.max(res.width, panelMinSize.width);
+                res.height += panelMinSize.height;
+            }
+            else {
+                res.width += panelMinSize.width;
+                res.height = Math.max(res.height, panelMinSize.height);
+            }
         });
 
         return this._minSize = res;
@@ -206,12 +226,14 @@ BEM.DOM.decl('flex-layout', {
         e.preventDefault();
 
         var props = this._getCalcProps(),
-            primaryPanel = this._panels.primary;
+            secondaryPanel = this._panels.secondary;
 
-        this._mouseOffset = e[props.mouseOffset];
-        this._mouseDownPrimarySize = primaryPanel.lastSize;
-        this._mouseDownPrimarySizeFactor = primaryPanel.type === 'fixed'? 1 : primaryPanel.size / primaryPanel.lastSize;
-        this._mouseDownInvertFactor = Object.keys(this._panels)[0] === 'primary'? 1 : -1;
+        this._mouseDownOffset = e[props.mouseOffset];
+        this._mouseDownSecondarySize = secondaryPanel.lastSize;
+        this._mouseDownSecondarySizeFactor = secondaryPanel.type === 'fixed'?
+            1 :
+            secondaryPanel.size / secondaryPanel.lastSize;
+        this._mouseDownInvertFactor = Object.keys(this._panels)[0] === 'secondary'? 1 : -1;
 
         this.bindToDoc({
             mousemove : this._onSplitterMouseMove,
@@ -223,22 +245,21 @@ BEM.DOM.decl('flex-layout', {
 
     _onSplitterMouseMove : function(e) {
         var props = this._getCalcProps(),
-            newMouseOffset = e[props.mouseOffset],
-            primaryPanel = this._panels.primary,
             secondaryPanel = this._panels.secondary,
-            fullSize = primaryPanel.lastSize + secondaryPanel.lastSize,
-            primaryMinSize = this._getPanelMinSize(primaryPanel)[props.size],
-            primaryMaxSize = this._getPanelMaxSize(primaryPanel)[props.size],
+            primaryPanel = this._panels.primary,
+            fullSize = secondaryPanel.lastSize + primaryPanel.lastSize,
             secondaryMinSize = this._getPanelMinSize(secondaryPanel)[props.size],
-            newPrimarySize = Math.min(
+            secondaryMaxSize = this._getPanelMaxSize(secondaryPanel)[props.size],
+            primaryMinSize = this._getPanelMinSize(primaryPanel)[props.size],
+            newSecondarySize = Math.min(
                 Math.max(
-                    this._mouseDownPrimarySize +
-                        (newMouseOffset - this._mouseOffset) * this._mouseDownInvertFactor,
-                    primaryMinSize),
-                primaryMaxSize,
-                fullSize - secondaryMinSize);
+                    this._mouseDownSecondarySize +
+                        (e[props.mouseOffset] - this._mouseDownOffset) * this._mouseDownInvertFactor,
+                    secondaryMinSize),
+                secondaryMaxSize,
+                fullSize - primaryMinSize);
 
-        primaryPanel.size = newPrimarySize * this._mouseDownPrimarySizeFactor;
+        secondaryPanel.size = newSecondarySize * this._mouseDownSecondarySizeFactor;
 
         this._invalidate();
     },
