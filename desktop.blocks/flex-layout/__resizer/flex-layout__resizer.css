@@ -1,0 +1,48 @@
+.flex-layout__resizer
+{
+    position: absolute;
+    z-index: 2;
+
+    overflow: hidden;
+}
+
+.flex-layout_orient_vert>.flex-layout__panel>.flex-layout__resizer
+{
+    left: 0;
+    top: 0;
+
+    width: 100%;
+
+    cursor: row-resize;
+}
+
+.flex-layout_orient_vert>.flex-layout__panel:first-child>.flex-layout__resizer
+{
+    top: 100%;
+}
+
+.flex-layout_orient_horiz>.flex-layout__panel>.flex-layout__resizer
+{
+    left: 0;
+    top: 0;
+
+    height: 100%;
+
+    cursor: col-resize;
+}
+
+.flex-layout_orient_horiz>.flex-layout__panel:first-child>.flex-layout__resizer
+{
+    left: 100%;
+}
+
+.flex-layout_primary_full>.flex-layout__panel>.flex-layout__resizer
+{
+    visibility: hidden;
+}
+
+.flex-layout_animated_yes .flex-layout__resizer
+{
+    -webkit-transition: left .5s, top .5s;
+    transition: left .5s, top .5s;
+}

@@ -2,65 +2,57 @@ BEM.DOM.decl('flex-layout', {
     onSetMod : {
         'js' : {
             'inited' : function() {
-                var _this = this,
-                    _self = _this.__self;
-
-                _this._panels = {};
-                _this._splitter = null;
-                _this._isPrimaryFull = _this.hasMod('primary', 'full');
-                _this._isAnimated = false;
-
-                _this.domElem.children().each(function(i, node) {
-                    var elem = $(node);
-
-                    if(elem.is(_self.buildSelector('panel'))) {
-                        var panel = _this._buildPanel(elem),
-                            kind = _this.hasMod(elem, 'primary')? 'primary' : 'secondary';
-
-                        if(_this._panels[kind]) {
-                            throw kind + ' panel should be the only one';
-                        }
-
-                        _this._panels[kind] = panel;
-                    }
-                    else if(elem.is(_self.buildSelector('splitter'))) {
-                        _this._splitter = elem;
-                    }
-                });
-
-                if(!_this._panels.primary) {
-                    throw 'can\'t find primary panel';
-                }
-
-                if(!_this._panels.secondary) {
-                    throw 'can\'t find secondary panel';
-                }
-
+                this._panels = this._buildPanels();
                 this._parent = this._addToParent();
+
+                this._isPrimaryFull = this.hasMod('primary', 'full');
+                this._isAnimated = false;
             }
         },
 
         'primary' : function(_, modVal) {
             this._isPrimaryFull = modVal === 'full';
             this._isAnimated = true;
+
             this._invalidate();
         }
     },
 
-    _buildPanel : function(elem) {
-        var elemParams = this.elemParams(elem),
-            res = {
-                elem      : elem,
-                minWidth  : elemParams.minWidth,
-                maxWidth  : elemParams.maxWidth,
-                minHeight : elemParams.minHeight,
-                maxHeight : elemParams.maxHeight
-            };
+    _buildPanels : function() {
+        var _this = this,
+            res = {};
 
-        if(elemParams.size) {
-            res.type = elemParams.size.toString().indexOf('%') > -1? 'percent' : 'fixed';
-            res.size = parseInt(elemParams.size, 10);
-            res.type === 'percent' && (res.size /= 100);
+        _this.domElem.children().each(function(i, node) {
+            var elem = $(node),
+                kind = _this.hasMod(elem, 'primary')? 'primary' : 'secondary',
+                elemParams = _this.elemParams(elem),
+                panel = {
+                    elem      : elem,
+                    minWidth  : elemParams.minWidth,
+                    maxWidth  : elemParams.maxWidth,
+                    minHeight : elemParams.minHeight,
+                    maxHeight : elemParams.maxHeight
+                };
+
+            if(elemParams.size) {
+                panel.type = elemParams.size.toString().indexOf('%') > -1? 'percent' : 'fixed';
+                panel.size = parseInt(elemParams.size, 10);
+                panel.type === 'percent' && (panel.size /= 100);
+            }
+
+            if(res[kind]) {
+                throw kind + ' panel should be the only one';
+            }
+
+            res[kind] = panel;
+        });
+
+        if(!res.primary) {
+            throw 'can\'t find primary panel';
+        }
+
+        if(!res.secondary) {
+            throw 'can\'t find secondary panel';
         }
 
         return res;
@@ -142,12 +134,6 @@ BEM.DOM.decl('flex-layout', {
                 css[props.offset] = panel.lastOffset = hidden? i? fullSize : -size : offset;
 
                 res.push({ elem : panel.elem, css : css });
-
-                if(i && _this._splitter) {
-                    var splitterCss = {};
-                    splitterCss[props.offset] = offset;
-                    res.push({ elem : _this._splitter, css : splitterCss });
-                }
             }
 
             hidden || (offset += size);
@@ -232,64 +218,8 @@ BEM.DOM.decl('flex-layout', {
         this._parent._invalidate();
     },
 
-    _onSplitterMouseDown : function(e) {
-        e.preventDefault();
-
-        var props = this._getCalcProps(),
-            secondaryPanel = this._panels.secondary;
-
-        this._mouseDownOffset = e[props.mouseOffset];
-        this._mouseDownSecondarySize = secondaryPanel.lastSize;
-        this._mouseDownSecondarySizeFactor = secondaryPanel.type === 'fixed'?
-            1 :
-            secondaryPanel.size / secondaryPanel.lastSize;
-        this._mouseDownInvertFactor = Object.keys(this._panels)[0] === 'secondary'? 1 : -1;
-
-        this
-            .bindToDoc({
-                mousemove : this._onSplitterMouseMove,
-                mouseup   : this._onSplitterMouseUp
-            })
-            .setMod(this._splitter, 'active', 'yes');
-    },
-
-    _onSplitterMouseMove : function(e) {
-        var props = this._getCalcProps(),
-            secondaryPanel = this._panels.secondary,
-            primaryPanel = this._panels.primary,
-            fullSize = secondaryPanel.lastSize + primaryPanel.lastSize,
-            secondaryMinSize = this._getPanelMinSize(secondaryPanel)[props.size],
-            secondaryMaxSize = this._getPanelMaxSize(secondaryPanel)[props.size],
-            primaryMinSize = this._getPanelMinSize(primaryPanel)[props.size],
-            newSecondarySize = Math.min(
-                Math.max(
-                    this._mouseDownSecondarySize +
-                        (e[props.mouseOffset] - this._mouseDownOffset) * this._mouseDownInvertFactor,
-                    secondaryMinSize),
-                secondaryMaxSize,
-                fullSize - primaryMinSize);
-
-        secondaryPanel.size = newSecondarySize * this._mouseDownSecondarySizeFactor;
-
-        this._invalidate();
-    },
-
-    _onSplitterMouseUp : function() {
-        this
-            .unbindFromDoc('mousemove mouseup')
-            .delMod(this._splitter, 'active');
-    },
-
     destruct : function() {
         this._removeFromParent();
         this.__base.apply(this, arguments);
-    }
-}, {
-    live : function() {
-        this.liveBindTo('splitter', 'mousedown', function(e) {
-            this._onSplitterMouseDown(e);
-        });
-
-        return false;
     }
 });

@@ -2,6 +2,6 @@
     mustDeps : { block : 'i-bem', elem : 'dom' },
     shouldDeps : [
         { mods : { root : 'yes' }},
-        { elem : ['panel', 'splitter'] }
+        { elem : ['panel', 'resizer', 'collapser'] }
     ]
 })

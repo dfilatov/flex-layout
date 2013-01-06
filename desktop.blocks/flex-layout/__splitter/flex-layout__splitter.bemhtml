@@ -1,5 +1,0 @@
-block flex-layout {
-    elem splitter {
-        content: applyCtx({ elem : 'splitter-inner' })
-    }
-}
