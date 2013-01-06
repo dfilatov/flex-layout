@@ -2,6 +2,8 @@
 {
     position: absolute;
     z-index: 3;
+
+    cursor: pointer;
 }
 
 .flex-layout_orient_vert>.flex-layout__panel>.flex-layout__collapser

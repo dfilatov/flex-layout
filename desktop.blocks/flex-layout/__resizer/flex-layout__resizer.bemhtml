@@ -1,5 +1,5 @@
 block flex-layout {
     elem resizer {
-        content: applyCtx({ elem : 'resizer-inner' })
+        content: applyCtx({ elem : 'resizer-i' })
     }
 }

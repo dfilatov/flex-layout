@@ -1,0 +1,5 @@
+block flex-layout {
+    elem collapser {
+        content: applyCtx({ elem : 'collapser-i' })
+    }
+}
