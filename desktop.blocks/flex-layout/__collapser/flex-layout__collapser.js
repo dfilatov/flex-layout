@@ -6,7 +6,7 @@ BEM.DOM.decl('flex-layout', {
     live : function() {
         this.__base();
 
-        this.liveBindTo('collapser', 'click', function(e) {
+        this.liveBindTo('collapser', 'leftclick', function(e) {
             this._onCollapserClick(e);
         });
 
