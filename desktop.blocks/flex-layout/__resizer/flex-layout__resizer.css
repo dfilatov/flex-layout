@@ -36,7 +36,7 @@
     left: 100%;
 }
 
-.flex-layout_primary_full>.flex-layout__panel>.flex-layout__resizer
+.flex-layout_mode_primary>.flex-layout__panel>.flex-layout__resizer
 {
     visibility: hidden;
 }

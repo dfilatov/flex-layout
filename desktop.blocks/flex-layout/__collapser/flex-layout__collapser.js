@@ -1,6 +1,6 @@
 BEM.DOM.decl('flex-layout', {
     _onCollapserClick : function() {
-        this.toggleMod('primary', 'full', '');
+        this.toggleMod('mode', 'primary', '');
     }
 }, {
     live : function() {

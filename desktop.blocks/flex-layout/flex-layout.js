@@ -5,13 +5,13 @@ BEM.DOM.decl('flex-layout', {
                 this._panels = this._buildPanels();
                 this._parent = this._addToParent();
 
-                this._isPrimaryFull = this.hasMod('primary', 'full');
+                this._isModePrimary = this.hasMod('mode', 'primary');
                 this._isAnimated = false;
             }
         },
 
-        'primary' : function(_, modVal) {
-            this._isPrimaryFull = modVal === 'full';
+        'mode' : function(_, modVal) {
+            this._isModePrimary = modVal === 'primary';
             this._isAnimated = true;
 
             this._invalidate();
@@ -108,7 +108,7 @@ BEM.DOM.decl('flex-layout', {
             _this._getPanelMaxSize(secondaryPanel)[props.size],
             fullSize - primaryMinSize);
 
-        sizes.primary = _this._isPrimaryFull? fullSize : fullSize - sizes.secondary;
+        sizes.primary = _this._isModePrimary? fullSize : fullSize - sizes.secondary;
 
         var offset = 0,
             res = [];
@@ -116,7 +116,7 @@ BEM.DOM.decl('flex-layout', {
         Object.keys(_this._panels).forEach(function(kind, i) {
             var panel = _this._panels[kind],
                 size = sizes[kind],
-                hidden = _this._isPrimaryFull && kind === 'secondary';
+                hidden = _this._isModePrimary && kind === 'secondary';
 
             if(panel.childLayout && !hidden) {
                 res = res.concat(panel.childLayout._recalcPanels(
