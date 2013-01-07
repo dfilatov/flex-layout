@@ -9,13 +9,13 @@
     z-index: 1;
 }
 
-.flex-layout_orient_vert>.flex-layout__panel
+.flex-layout__panel_orient_vert
 {
     left: 0;
     width: 100%;
 }
 
-.flex-layout_orient_horiz>.flex-layout__panel
+.flex-layout__panel_orient_horiz
 {
     top: 0;
     height: 100%;

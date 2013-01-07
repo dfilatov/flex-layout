@@ -1,5 +1,8 @@
-block flex-layout {
-    elem resizer {
-        content: applyCtx({ elem : 'resizer-i' })
+block flex-layout, elem resizer {
+    default: {
+        (this.ctx.mods || (this.ctx.mods = {})).orient = this.orient;
+        applyNext();
     }
+
+    content: applyCtx({ elem : 'resizer-i' })
 }

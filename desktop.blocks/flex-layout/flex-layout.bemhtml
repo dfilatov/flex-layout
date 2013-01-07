@@ -1,3 +1,11 @@
 block flex-layout {
-    js: true
+    js: true,
+
+    content: {
+        applyNext(
+            this.orient = this.ctx.mods.orient,
+            this.theme = this.ctx.mods.theme || this.theme,
+            this.ctx = this.ctx.content,
+            '');
+    }
 }
