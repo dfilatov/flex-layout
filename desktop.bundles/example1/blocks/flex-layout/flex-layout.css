@@ -1,0 +1,10 @@
+.flex-layout_theme_simple .flex-layout__panel_id_left .flex-layout__panel-content,
+.flex-layout_theme_simple .flex-layout__panel_id_right .flex-layout__panel-content
+{
+    background: #d8dde4;
+}
+
+.flex-layout_theme_simple .flex-layout__panel_id_center .flex-layout__panel-content
+{
+    background: #fff;
+}
