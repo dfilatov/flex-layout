@@ -24,20 +24,11 @@ BEM.DOM.decl('flex-layout', {
     _onResizerMouseMove : function(e) {
         var props = this._getCalcProps(),
             secondaryPanel = this._panels.secondary,
-            primaryPanel = this._panels.primary,
-            fullSize = secondaryPanel.lastSize + primaryPanel.lastSize,
-            secondaryMinSize = this._getPanelMinSize(secondaryPanel)[props.size],
-            secondaryMaxSize = this._getPanelMaxSize(secondaryPanel)[props.size],
-            primaryMinSize = this._getPanelMinSize(primaryPanel)[props.size],
-            newSecondarySize = Math.min(
-                Math.max(
-                    this._mouseDownSecondarySize +
-                        (e[props.mouseOffset] - this._mouseDownOffset) * this._mouseDownInvertFactor,
-                    secondaryMinSize),
-                secondaryMaxSize,
-                fullSize - primaryMinSize);
+            primaryPanel = this._panels.primary;
 
-        secondaryPanel.size = newSecondarySize * this._mouseDownSecondarySizeFactor;
+        secondaryPanel.size = this._calcSecondarySize(
+            this._mouseDownSecondarySize + (e[props.mouseOffset] - this._mouseDownOffset) * this._mouseDownInvertFactor,
+            secondaryPanel.lastSize + primaryPanel.lastSize) * this._mouseDownSecondarySizeFactor;
 
         this._invalidate();
     },

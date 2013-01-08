@@ -99,18 +99,11 @@ BEM.DOM.decl('flex-layout', {
             props = _this._getCalcProps(),
             fullSize = parentSizes[props.size],
             secondaryPanel = _this._panels.secondary,
-            primaryPanel = _this._panels.primary,
-            primaryMinSize = _this._getPanelMinSize(primaryPanel)[props.size],
             sizes = {};
 
-        sizes.secondary = Math.min(
-            secondaryPanel.type === 'fixed'?
-                secondaryPanel.size :
-                Math.max(
-                    _this._getPanelMinSize(secondaryPanel)[props.size],
-                    Math.ceil(secondaryPanel.size * fullSize)),
-            _this._getPanelMaxSize(secondaryPanel)[props.size],
-            fullSize - primaryMinSize);
+        sizes.secondary = _this._calcSecondarySize(
+            secondaryPanel.type === 'fixed'? secondaryPanel.size : secondaryPanel.size * fullSize,
+            fullSize);
 
         sizes.primary = _this._isModePrimary? fullSize : fullSize - sizes.secondary;
 
@@ -152,6 +145,19 @@ BEM.DOM.decl('flex-layout', {
         }
 
         return res;
+    },
+
+    _calcSecondarySize : function(desiredSize, fullSize) {
+        var sizeProp = this._getCalcProps().size,
+            primaryPanel = this._panels.primary,
+            secondaryPanel = this._panels.secondary;
+
+        return Math.min(
+            Math.max(
+                desiredSize,
+                this._getPanelMinSize(secondaryPanel)[sizeProp]),
+            this._getPanelMaxSize(secondaryPanel)[sizeProp],
+            fullSize - this._getPanelMinSize(primaryPanel)[sizeProp]);
     },
 
     _getCalcProps : function() {
