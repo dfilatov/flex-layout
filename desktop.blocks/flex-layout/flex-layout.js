@@ -102,7 +102,7 @@ BEM.DOM.decl('flex-layout', {
             sizes = {};
 
         sizes.secondary = _this._calcSecondarySize(
-            secondaryPanel.type === 'fixed'? secondaryPanel.size : secondaryPanel.size * fullSize,
+            secondaryPanel.type === 'fixed'? secondaryPanel.size : Math.ceil(secondaryPanel.size * fullSize),
             fullSize);
 
         sizes.primary = _this._isModePrimary? fullSize : fullSize - sizes.secondary;
