@@ -3,10 +3,14 @@ BEM.DOM.decl({ block : 'flex-layout', modName : 'root', modVal : 'yes' }, {
         'js' : {
             'inited' : function() {
                 this.__base.apply(this, arguments);
+
+                this._recalcScheduled = true;
                 this.afterCurrentEvent(function() {
-                    this
+                    this.domElem && this
                         .bindToWin('resize', this.recalc)
                         .recalc();
+
+                    this._recalcScheduled = false;
                 });
             }
         }
@@ -29,6 +33,6 @@ BEM.DOM.decl({ block : 'flex-layout', modName : 'root', modVal : 'yes' }, {
     _removeFromParent : function() {},
 
     _invalidate : function() {
-        this.recalc();
+        this._recalcScheduled || this.recalc();
     }
 });

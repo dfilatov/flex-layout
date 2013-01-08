@@ -75,6 +75,7 @@ BEM.DOM.decl('flex-layout', {
 
     _addChildLayout : function(panel, block) {
         this._findPanelByElem(panel).childLayout = block;
+        this._invalidate();
         return this;
     },
 
@@ -85,7 +86,10 @@ BEM.DOM.decl('flex-layout', {
         delete panel.lastSize;
         delete panel.lastOffset;
         delete panel.minSize;
+        delete panel.hidden;
         delete this._minSize;
+
+        this._invalidate();
 
         return this;
     },
