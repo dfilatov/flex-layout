@@ -163,8 +163,8 @@ BEM.DOM.decl('flex-layout', {
     _getCalcProps : function() {
         return this._calcProps || (this._calcProps =
             this.hasMod('orient', 'vert')?
-                { size : 'height', offset : 'top', translateOffset : 'translateY', mouseOffset : 'clientY' } :
-                { size : 'width', offset : 'left', translateOffset : 'translateX', mouseOffset : 'clientX' });
+                { size : 'height', offset : 'top', mouseOffset : 'clientY' } :
+                { size : 'width', offset : 'left', mouseOffset : 'clientX' });
     },
 
     _getMinSize : function() {
