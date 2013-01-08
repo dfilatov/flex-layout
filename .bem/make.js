@@ -10,21 +10,21 @@ MAKE.decl('Arch', {
 
     bundlesLevelsRegexp: /^.+?\.bundles$/,
 
-//    getLibraries: function() {
-//
-//        return {
-//            'bem-bl': {
-//                type: 'git',
-//                url: 'git://github.com/bem/bem-bl.git',
-//                treeish: '0.3'
-//            },
-//            'bemhtml' : {
-//                type: 'git',
-//                url: 'git://github.com/bem/bemhtml.git'
-//            }
-//        };
-//
-//    }
+    getLibraries: function() {
+
+        return {
+            'bem-bl': {
+                type: 'git',
+                url: 'git://github.com/bem/bem-bl.git',
+                treeish: '0.3'
+            },
+            'bemhtml' : {
+                type: 'git',
+                url: 'git://github.com/bem/bemhtml.git'
+            }
+        };
+
+    }
 
 });
 
