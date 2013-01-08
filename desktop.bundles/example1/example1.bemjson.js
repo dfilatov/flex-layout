@@ -2,6 +2,7 @@
     block: 'b-page',
     title: 'Layout',
     favicon: '/favicon.ico',
+    'x-ua-compatible': false,
     head: [
         { elem: 'css', url: '_example1.css', ie: false },
         { elem: 'css', url: '_example1', ie: true },

@@ -13,6 +13,7 @@
 
     width: 100%;
 
+    cursor: n-resize;
     cursor: row-resize;
 }
 
@@ -28,6 +29,7 @@
 
     height: 100%;
 
+    cursor: e-resize;
     cursor: col-resize;
 }
 

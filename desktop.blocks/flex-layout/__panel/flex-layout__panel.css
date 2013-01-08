@@ -24,6 +24,8 @@
 .flex-layout_animated_yes .flex-layout__panel
 {
     -webkit-transition: left .5s, width .5s, top .5s, height .5s;
+    -moz-transition: left .5s, width .5s, top .5s, height .5s;
+    -o-transition: left .5s, width .5s, top .5s, height .5s;
     transition: left .5s, width .5s, top .5s, height .5s;
 }
 

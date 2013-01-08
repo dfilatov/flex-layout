@@ -25,7 +25,6 @@
     border-left-width: 1px;
 }
 
-
 .flex-layout_theme_simple .flex-layout__panel:first-child>.flex-layout__panel-content,
 .flex-layout_theme_simple .flex-layout__panel:first-child>.flex-layout
 {
@@ -59,8 +58,10 @@
 
     overflow: hidden;
 
-    -webkit-transition: box-shadow .2s, background-color .2s;
-    transition: box-shadow .2s, background-color .2s;
+    -webkit-transition: background-color .2s;
+    -moz-transition: background-color .2s;
+    -o-transition: background-color .2s;
+    transition: background-color .2s;
 }
 
 .flex-layout_theme_simple .flex-layout__resizer_active_yes .flex-layout__resizer-i
