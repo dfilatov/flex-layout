@@ -90,11 +90,6 @@
     margin-top: -8px;
 }
 
-.flex-layout_theme_simple .flex-layout__panel_orient_horiz:first-child>.flex-layout__collapser
-{
-    margin-left: -10px;
-}
-
 .flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel_orient_horiz>.flex-layout__collapser,
 .flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel_orient_horiz>.flex-layout__collapser
 {
@@ -104,7 +99,8 @@
 .flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel_orient_horiz:first-child>.flex-layout__collapser,
 .flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel_orient_horiz:first-child>.flex-layout__collapser
 {
-    margin-left: -1px;
+    left: 100%;
+    margin-left: 0;
 }
 
 .flex-layout_theme_simple .flex-layout__collapser-i

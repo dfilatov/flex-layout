@@ -23,11 +23,6 @@
     top: 50%;
 }
 
-.flex-layout_orient_horiz>.flex-layout__panel:first-child>.flex-layout__collapser
-{
-    left: 100%;
-}
-
 .flex-layout_animated_yes .flex-layout__collapser
 {
     -webkit-transition: left .5s, top .5s;
