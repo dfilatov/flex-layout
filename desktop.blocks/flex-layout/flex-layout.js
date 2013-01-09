@@ -15,6 +15,10 @@ BEM.DOM.decl('flex-layout', {
             this._isAnimated = true;
 
             this._invalidate();
+
+            this.afterCurrentEvent(function() {
+                this.domElem && this.trigger('mode-change');
+            });
         }
     },
 
