@@ -1,4 +1,4 @@
-block flex-layout, elem panel {
+block flex-layout, elem pane {
     default: {
         (this.ctx.mods || (this.ctx.mods = {})).orient = this.orient;
         applyNext();

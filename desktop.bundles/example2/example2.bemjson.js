@@ -15,31 +15,31 @@
         mods: { orient: 'vert', root: 'yes', theme: 'simple' },
         content: [
             {
-                elem: 'panel',
+                elem: 'pane',
                 mods: { id: 'top' },
                 js: { size: '50%' },
-                elem: 'panel',
+                elem: 'pane',
                 content: [
                     { elem: 'resizer' },
                     {
                         block: 'flex-layout',
                         mods: { orient: 'horiz'},
                         content: [
-                            { elem: 'panel', js: { size: '50%' }, content: [{ elem: 'panel-content' }, { elem: 'resizer' }]},
-                            { elem: 'panel', mods: { primary : 'yes' }, content: { elem: 'panel-content' }}
+                            { elem: 'pane', js: { size: '50%' }, content: [{ elem: 'pane-content' }, { elem: 'resizer' }]},
+                            { elem: 'pane', mods: { primary : 'yes' }, content: { elem: 'pane-content' }}
                         ]
                     }
                 ]
             },
             {
-                elem: 'panel',
+                elem: 'pane',
                 mods: { primary: 'yes', id: 'middle' },
                 content: {
                     block: 'flex-layout',
                     mods: { orient: 'horiz'},
                     content: [
-                        { elem: 'panel', js: { size: '50%' }, content: [{ elem: 'panel-content' }, { elem: 'resizer' }]},
-                        { elem: 'panel', mods: { primary : 'yes' }, content: { elem: 'panel-content' }}
+                        { elem: 'pane', js: { size: '50%' }, content: [{ elem: 'pane-content' }, { elem: 'resizer' }]},
+                        { elem: 'pane', mods: { primary : 'yes' }, content: { elem: 'pane-content' }}
                     ]
                 }
             }

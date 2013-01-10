@@ -3,7 +3,7 @@ BEM.DOM.decl('flex-layout', {
         e.preventDefault();
 
         var props = this._getCalcProps(),
-            secondaryPanel = this._panels.secondary;
+            secondaryPanel = this._panes.secondary;
 
         this._resizer = e.data.domElem;
         this._mouseDownOffset = e[props.mouseOffset];
@@ -11,7 +11,7 @@ BEM.DOM.decl('flex-layout', {
         this._mouseDownSecondarySizeFactor = secondaryPanel.type === 'fixed'?
             1 :
             secondaryPanel.size / secondaryPanel.lastSize;
-        this._mouseDownInvertFactor = Object.keys(this._panels)[0] === 'secondary'? 1 : -1;
+        this._mouseDownInvertFactor = Object.keys(this._panes)[0] === 'secondary'? 1 : -1;
 
         this
             .bindToDoc({
@@ -23,8 +23,8 @@ BEM.DOM.decl('flex-layout', {
 
     _onResizerMouseMove : function(e) {
         var props = this._getCalcProps(),
-            secondaryPanel = this._panels.secondary,
-            primaryPanel = this._panels.primary;
+            secondaryPanel = this._panes.secondary,
+            primaryPanel = this._panes.primary;
 
         secondaryPanel.size = this._calcSecondarySize(
             this._mouseDownSecondarySize + (e[props.mouseOffset] - this._mouseDownOffset) * this._mouseDownInvertFactor,

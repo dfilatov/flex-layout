@@ -1,0 +1,30 @@
+.flex-layout__toggler
+{
+    position: absolute;
+    z-index: 3;
+
+    cursor: pointer;
+}
+
+.flex-layout_orient_vert>.flex-layout__pane>.flex-layout__toggler
+{
+    left: 50%;
+    top: 0;
+}
+
+.flex-layout_orient_vert>.flex-layout__pane:first-child>.flex-layout__toggler
+{
+    top: 100%;
+}
+
+.flex-layout_orient_horiz>.flex-layout__pane>.flex-layout__toggler
+{
+    left: 0;
+    top: 50%;
+}
+
+.flex-layout_animated_yes .flex-layout__toggler
+{
+    -webkit-transition: left .5s, top .5s;
+    transition: left .5s, top .5s;
+}

@@ -1,10 +1,10 @@
-.flex-layout_theme_simple .flex-layout__panel_id_left .flex-layout__panel-content,
-.flex-layout_theme_simple .flex-layout__panel_id_right .flex-layout__panel-content
+.flex-layout_theme_simple .flex-layout__pane_id_left .flex-layout__pane-content,
+.flex-layout_theme_simple .flex-layout__pane_id_right .flex-layout__pane-content
 {
     background: #d8dde4;
 }
 
-.flex-layout_theme_simple .flex-layout__panel_id_center .flex-layout__panel-content
+.flex-layout_theme_simple .flex-layout__pane_id_center .flex-layout__pane-content
 {
     background: #fff;
 }

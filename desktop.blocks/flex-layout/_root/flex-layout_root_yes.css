@@ -1,0 +1,9 @@
+.flex-layout_root_yes
+{
+    visibility: hidden;
+}
+
+.flex-layout_ready_yes
+{
+    visibility: visible;
+}

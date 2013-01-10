@@ -12,6 +12,8 @@ BEM.DOM.decl({ block : 'flex-layout', modName : 'root', modVal : 'yes' }, {
                         .bindToWin('resize', this.recalc)
                         .recalc();
 
+                    this.setMod('ready', 'yes');
+
                     this._recalcScheduled = false;
                 });
             }

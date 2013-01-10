@@ -2,27 +2,49 @@ BEM.DOM.decl('flex-layout', {
     onSetMod : {
         'js' : {
             'inited' : function() {
-                this._panels = this._buildPanels();
+                this._panes = this._buildPanes();
                 this._parent = this._addToParent();
 
-                this._isModePrimary = this.hasMod('mode', 'primary');
+                this._isSecondaryHidden = this.hasMod(this._panes.secondary.elem, 'hidden');
                 this._isAnimated = false;
             }
-        },
-
-        'mode' : function(_, modVal) {
-            this._isModePrimary = modVal === 'primary';
-            this._isAnimated = true;
-
-            this._invalidate();
-
-            this.afterCurrentEvent(function() {
-                this.domElem && this.trigger('mode-change');
-            });
         }
     },
 
-    _buildPanels : function() {
+    onElemSetMod : {
+        'pane' : {
+            'hidden' : function(elem, _, modVal) {
+                if(elem[0] !== this._panes.secondary.elem[0]) {
+                    return false;
+                }
+
+                var isSecondaryHidden = this._isSecondaryHidden = !!modVal;
+                this._isAnimated = true;
+
+                this._invalidate();
+
+                this
+                    .toggleSecondaryPane()
+                    .afterCurrentEvent(function() {
+                        this.domElem && this.trigger('secondary-pane-' + isSecondaryHidden? 'hide' : 'show');
+                    });
+            }
+        }
+    },
+
+    showSecondaryPane : function() {
+        return this.delMod(this._panes.secondary.elem, 'hidden');
+    },
+
+    hideSecondaryPane : function() {
+        return this.setMod(this._panes.secondary.elem, 'hidden', 'yes');
+    },
+
+    toggleSecondaryPane : function() {
+        return this.toggleMod(this._panes.secondary.elem, 'hidden', 'yes', '');
+    },
+
+    _buildPanes : function() {
         var _this = this,
             res = {};
 
@@ -30,7 +52,7 @@ BEM.DOM.decl('flex-layout', {
             var elem = $(node),
                 kind = _this.hasMod(elem, 'primary')? 'primary' : 'secondary',
                 elemParams = _this.elemParams(elem),
-                panel = {
+                pane = {
                     elem      : elem,
                     minWidth  : elemParams.minWidth,
                     maxWidth  : elemParams.maxWidth,
@@ -39,24 +61,24 @@ BEM.DOM.decl('flex-layout', {
                 };
 
             if(elemParams.size) {
-                panel.type = elemParams.size.toString().indexOf('%') > -1? 'percent' : 'fixed';
-                panel.size = parseInt(elemParams.size, 10);
-                panel.type === 'percent' && (panel.size /= 100);
+                pane.type = elemParams.size.toString().indexOf('%') > -1? 'percent' : 'fixed';
+                pane.size = parseInt(elemParams.size, 10);
+                pane.type === 'percent' && (pane.size /= 100);
             }
 
             if(res[kind]) {
-                throw kind + ' panel should be the only one';
+                throw kind + ' pane should be the only one';
             }
 
-            res[kind] = panel;
+            res[kind] = pane;
         });
 
         if(!res.primary) {
-            throw 'can\'t find primary panel';
+            throw 'can\'t find primary pane';
         }
 
         if(!res.secondary) {
-            throw 'can\'t find secondary panel';
+            throw 'can\'t find secondary pane';
         }
 
         return res;
@@ -73,24 +95,24 @@ BEM.DOM.decl('flex-layout', {
         return this._parent._removeChildLayout(this.domElem.parent(), this);
     },
 
-    _findPanelByElem : function(panelElem) {
-        return this._panels[this._panels.primary.elem[0] === panelElem[0]? 'primary' : 'secondary'];
+    _findPanelByElem : function(paneElem) {
+        return this._panes[this._panes.primary.elem[0] === paneElem[0]? 'primary' : 'secondary'];
     },
 
-    _addChildLayout : function(panel, block) {
-        this._findPanelByElem(panel).childLayout = block;
+    _addChildLayout : function(pane, block) {
+        this._findPanelByElem(pane).childLayout = block;
         this._invalidate();
         return this;
     },
 
-    _removeChildLayout : function(panelElem, block) {
-        var panel = this._findPanelByElem(panelElem);
+    _removeChildLayout : function(paneElem, block) {
+        var pane = this._findPanelByElem(paneElem);
 
-        delete panel.childLayout;
-        delete panel.lastSize;
-        delete panel.lastOffset;
-        delete panel.minSize;
-        delete panel.hidden;
+        delete pane.childLayout;
+        delete pane.lastSize;
+        delete pane.lastOffset;
+        delete pane.minSize;
+        delete pane.hidden;
         delete this._minSize;
 
         this._invalidate();
@@ -102,39 +124,39 @@ BEM.DOM.decl('flex-layout', {
         var _this = this,
             props = _this._getCalcProps(),
             fullSize = parentSizes[props.size],
-            secondaryPanel = _this._panels.secondary,
+            secondaryPanel = _this._panes.secondary,
             sizes = {};
 
         sizes.secondary = _this._calcSecondarySize(
             secondaryPanel.type === 'fixed'? secondaryPanel.size : Math.ceil(secondaryPanel.size * fullSize),
             fullSize);
 
-        sizes.primary = _this._isModePrimary? fullSize : fullSize - sizes.secondary;
+        sizes.primary = _this._isSecondaryHidden? fullSize : fullSize - sizes.secondary;
 
         var offset = 0,
             res = [];
 
-        Object.keys(_this._panels).forEach(function(kind, i) {
-            var panel = _this._panels[kind],
+        Object.keys(_this._panes).forEach(function(kind, i) {
+            var pane = _this._panes[kind],
                 size = sizes[kind],
-                hidden = _this._isModePrimary && kind === 'secondary';
+                hidden = _this._isSecondaryHidden && kind === 'secondary';
 
-            if(panel.childLayout && !hidden) {
-                res = res.concat(panel.childLayout._recalcPanels(
+            if(pane.childLayout && !hidden) {
+                res = res.concat(pane.childLayout._recalcPanels(
                     props.size === 'height'?
                         { width : parentSizes.width, height : size } :
                         { width : size, height : parentSizes.height }));
             }
 
-            if(size !== panel.lastSize || offset !== panel.lastOffset || panel.hidden !== hidden) { // optimizing
-                panel.hidden = hidden;
+            if(size !== pane.lastSize || offset !== pane.lastOffset || pane.hidden !== hidden) { // optimizing
+                pane.hidden = hidden;
 
                 var css = {};
 
-                css[props.size] = panel.lastSize = size;
-                css[props.offset] = panel.lastOffset = hidden? i? fullSize : -size : offset;
+                css[props.size] = pane.lastSize = size;
+                css[props.offset] = pane.lastOffset = hidden? i? fullSize : -size : offset;
 
-                res.push({ elem : panel.elem, css : css });
+                res.push({ elem : pane.elem, css : css });
             }
 
             hidden || (offset += size);
@@ -153,8 +175,8 @@ BEM.DOM.decl('flex-layout', {
 
     _calcSecondarySize : function(desiredSize, fullSize) {
         var sizeProp = this._getCalcProps().size,
-            primaryPanel = this._panels.primary,
-            secondaryPanel = this._panels.secondary;
+            primaryPanel = this._panes.primary,
+            secondaryPanel = this._panes.secondary;
 
         return Math.min(
             Math.max(
@@ -179,33 +201,33 @@ BEM.DOM.decl('flex-layout', {
         var _this = this,
             res = { width : 0, height : 0 };
 
-        Object.keys(_this._panels).forEach(function(kind) {
-            var panelMinSize = _this._getPanelMinSize(_this._panels[kind]);
+        Object.keys(_this._panes).forEach(function(kind) {
+            var paneMinSize = _this._getPanelMinSize(_this._panes[kind]);
 
             if(_this.hasMod('orient', 'vert')) {
-                res.width = Math.max(res.width, panelMinSize.width);
-                res.height += panelMinSize.height;
+                res.width = Math.max(res.width, paneMinSize.width);
+                res.height += paneMinSize.height;
             }
             else {
-                res.width += panelMinSize.width;
-                res.height = Math.max(res.height, panelMinSize.height);
+                res.width += paneMinSize.width;
+                res.height = Math.max(res.height, paneMinSize.height);
             }
         });
 
         return this._minSize = res;
     },
 
-    _getPanelMinSize : function(panel) {
-        if(typeof panel.minSize !== 'undefined') {
-            return panel.minSize;
+    _getPanelMinSize : function(pane) {
+        if(typeof pane.minSize !== 'undefined') {
+            return pane.minSize;
         }
 
         var res = { width : 0, height : 0 },
-            selfMinWidth = panel.minWidth? panel.minWidth : panel.type === 'fixed' && panel.size || 50,
-            selfMinHeight = panel.minHeight? panel.minHeight : panel.type === 'fixed' && panel.size || 50;
+            selfMinWidth = pane.minWidth? pane.minWidth : pane.type === 'fixed' && pane.size || 50,
+            selfMinHeight = pane.minHeight? pane.minHeight : pane.type === 'fixed' && pane.size || 50;
 
-        if(panel.childLayout) {
-            var childMinSize = panel.childLayout._getMinSize();
+        if(pane.childLayout) {
+            var childMinSize = pane.childLayout._getMinSize();
             res.width = Math.max(childMinSize.width, selfMinWidth);
             res.height = Math.max(childMinSize.height, selfMinHeight);
         }
@@ -214,17 +236,17 @@ BEM.DOM.decl('flex-layout', {
             res.height = selfMinHeight;
         }
 
-        return panel.minSize = res;
+        return pane.minSize = res;
     },
 
-    _getPanelMaxSize : function(panel) {
-        if(typeof panel.maxSize !== 'undefined') {
-            return panel.maxSize;
+    _getPanelMaxSize : function(pane) {
+        if(typeof pane.maxSize !== 'undefined') {
+            return pane.maxSize;
         }
 
-        return panel.maxSize = {
-            width  : panel.maxWidth || Number.POSITIVE_INFINITY,
-            height : panel.maxHeight || Number.POSITIVE_INFINITY
+        return pane.maxSize = {
+            width  : pane.maxWidth || Number.POSITIVE_INFINITY,
+            height : pane.maxHeight || Number.POSITIVE_INFINITY
         };
     },
 

@@ -1,27 +1,27 @@
-.flex-layout__panel
+.flex-layout__pane
 {
     position: absolute;
     z-index: 2;
 }
 
-.flex-layout__panel_primary_yes
+.flex-layout__pane_primary_yes
 {
     z-index: 1;
 }
 
-.flex-layout__panel_orient_vert
+.flex-layout__pane_orient_vert
 {
     left: 0;
     width: 100%;
 }
 
-.flex-layout__panel_orient_horiz
+.flex-layout__pane_orient_horiz
 {
     top: 0;
     height: 100%;
 }
 
-.flex-layout_animated_yes .flex-layout__panel
+.flex-layout_animated_yes .flex-layout__pane
 {
     -webkit-transition: left .5s, width .5s, top .5s, height .5s;
     -moz-transition: left .5s, width .5s, top .5s, height .5s;
@@ -29,7 +29,7 @@
     transition: left .5s, width .5s, top .5s, height .5s;
 }
 
-.flex-layout__panel-content
+.flex-layout__pane-content
 {
     position: absolute;
     z-index: 1;

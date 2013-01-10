@@ -1,5 +1,5 @@
 .flex-layout_theme_simple .flex-layout,
-.flex-layout_theme_simple .flex-layout__panel-content
+.flex-layout_theme_simple .flex-layout__pane-content
 {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -8,26 +8,26 @@
     border: 0 solid #c4c4c4;
 }
 
-.flex-layout_theme_simple .flex-layout__panel-content
+.flex-layout_theme_simple .flex-layout__pane-content
 {
     overflow: auto;
     background: #f5f5f5;
 }
 
-.flex-layout_theme_simple .flex-layout__panel_orient_vert>.flex-layout__panel-content,
-.flex-layout_theme_simple .flex-layout__panel_orient_vert>.flex-layout
+.flex-layout_theme_simple .flex-layout__pane_orient_vert>.flex-layout__pane-content,
+.flex-layout_theme_simple .flex-layout__pane_orient_vert>.flex-layout
 {
     border-top-width: 1px;
 }
 
-.flex-layout_theme_simple .flex-layout__panel_orient_horiz>.flex-layout__panel-content,
-.flex-layout_theme_simple .flex-layout__panel_orient_horiz>.flex-layout
+.flex-layout_theme_simple .flex-layout__pane_orient_horiz>.flex-layout__pane-content,
+.flex-layout_theme_simple .flex-layout__pane_orient_horiz>.flex-layout
 {
     border-left-width: 1px;
 }
 
-.flex-layout_theme_simple .flex-layout__panel:first-child>.flex-layout__panel-content,
-.flex-layout_theme_simple .flex-layout__panel:first-child>.flex-layout
+.flex-layout_theme_simple .flex-layout__pane:first-child>.flex-layout__pane-content,
+.flex-layout_theme_simple .flex-layout__pane:first-child>.flex-layout
 {
     border: 0;
 }
@@ -48,7 +48,7 @@
     padding: 0 2px;
 }
 
-.flex-layout_theme_simple .flex-layout__panel_orient_horiz:first-child>.flex-layout__resizer
+.flex-layout_theme_simple .flex-layout__pane_orient_horiz:first-child>.flex-layout__resizer
 {
     margin-left: -2px;
 }
@@ -82,7 +82,7 @@
     height: 100%;
 }
 
-.flex-layout_theme_simple .flex-layout__collapser_orient_horiz
+.flex-layout_theme_simple .flex-layout__toggler_orient_horiz
 {
     width: 11px;
     height: 16px;
@@ -90,20 +90,18 @@
     margin-top: -8px;
 }
 
-.flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel_orient_horiz>.flex-layout__collapser,
-.flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel_orient_horiz>.flex-layout__collapser
+.flex-layout_theme_simple .flex-layout__pane_hidden_yes>.flex-layout__toggler_orient_horiz
 {
     margin-left: -11px;
 }
 
-.flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel_orient_horiz:first-child>.flex-layout__collapser,
-.flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel_orient_horiz:first-child>.flex-layout__collapser
+.flex-layout_theme_simple .flex-layout__pane_hidden_yes:first-child>.flex-layout__toggler_orient_horiz
 {
     left: 100%;
     margin-left: 0;
 }
 
-.flex-layout_theme_simple .flex-layout__collapser-i
+.flex-layout_theme_simple .flex-layout__toggler-i
 {
     position: absolute;
     left: 3px;
@@ -116,24 +114,22 @@
     border-color: transparent;
 }
 
-.flex-layout_theme_simple .flex-layout__collapser_orient_horiz .flex-layout__collapser-i,
-.flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel:first-child>.flex-layout__collapser_orient_horiz .flex-layout__collapser-i,
-.flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel:first-child>.flex-layout__collapser_orient_horiz .flex-layout__collapser-i
+.flex-layout_theme_simple .flex-layout__toggler_orient_horiz .flex-layout__toggler-i,
+.flex-layout_theme_simple .flex-layout__pane.flex-layout__pane_hidden_yes:first-child>.flex-layout__toggler_orient_horiz .flex-layout__toggler-i
 {
     border-width: 5px 0 5px 5px;
     border-left-color: #747474;
 }
 
-.flex-layout_theme_simple .flex-layout__panel:first-child>.flex-layout__collapser_orient_horiz .flex-layout__collapser-i,
-.flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel>.flex-layout__collapser_orient_horiz .flex-layout__collapser-i,
-.flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel>.flex-layout__collapser_orient_horiz .flex-layout__collapser-i
+.flex-layout_theme_simple .flex-layout__pane:first-child>.flex-layout__toggler_orient_horiz .flex-layout__toggler-i,
+.flex-layout_theme_simple .flex-layout__pane_hidden_yes>.flex-layout__toggler_orient_horiz .flex-layout__toggler-i
 {
     border-width: 5px 5px 5px 0;
     border-left-color: transparent;
     border-right-color: #747474;
 }
 
-.flex-layout_theme_simple .flex-layout__collapser_orient_vert
+.flex-layout_theme_simple .flex-layout__toggler_orient_vert
 {
     width: 16px;
     height: 11px;
@@ -141,34 +137,30 @@
     margin: -1px 0 0 -8px;
 }
 
-.flex-layout_theme_simple .flex-layout__panel:first-child>.flex-layout__collapser_orient_vert
+.flex-layout_theme_simple .flex-layout__pane:first-child>.flex-layout__toggler_orient_vert
 {
     margin-top: -9px;
 }
 
-.flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel>.flex-layout__collapser_orient_vert,
-.flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel>.flex-layout__collapser_orient_vert
+.flex-layout_theme_simple .flex-layout__pane_hidden_yes>.flex-layout__toggler_orient_vert
 {
     margin-top: -10px;
 }
 
-.flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel:first-child>.flex-layout__collapser_orient_vert,
-.flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel:first-child>.flex-layout__collapser_orient_vert
+.flex-layout_theme_simple .flex-layout__pane_hidden_yes:first-child>.flex-layout__toggler_orient_vert
 {
     margin-top: -1px;
 }
 
-.flex-layout_theme_simple .flex-layout__panel>.flex-layout__collapser_orient_vert .flex-layout__collapser-i,
-.flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel:first-child>.flex-layout__collapser_orient_vert .flex-layout__collapser-i,
-.flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel:first-child>.flex-layout__collapser_orient_vert .flex-layout__collapser-i
+.flex-layout_theme_simple .flex-layout__toggler_orient_vert .flex-layout__toggler-i,
+.flex-layout_theme_simple .flex-layout__pane.flex-layout__pane_hidden_yes:first-child>.flex-layout__toggler_orient_vert .flex-layout__toggler-i
 {
     border-width: 5px 5px 0 5px;
     border-top-color: #747474;
 }
 
-.flex-layout_theme_simple .flex-layout__panel:first-child>.flex-layout__collapser_orient_vert .flex-layout__collapser-i,
-.flex-layout_theme_simple.flex-layout_mode_primary>.flex-layout__panel>.flex-layout__collapser_orient_vert .flex-layout__collapser-i,
-.flex-layout_theme_simple .flex-layout_mode_primary>.flex-layout__panel>.flex-layout__collapser_orient_vert .flex-layout__collapser-i
+.flex-layout_theme_simple .flex-layout__pane:first-child>.flex-layout__toggler_orient_vert .flex-layout__toggler-i,
+.flex-layout_theme_simple .flex-layout__pane_hidden_yes>.flex-layout__toggler_orient_vert .flex-layout__toggler-i
 {
     border-width: 0 5px 5px 5px;
     border-top-color: transparent;

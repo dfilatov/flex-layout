@@ -17,7 +17,7 @@
     cursor: row-resize;
 }
 
-.flex-layout__panel:first-child>.flex-layout__resizer_orient_vert
+.flex-layout__pane:first-child>.flex-layout__resizer_orient_vert
 {
     top: 100%;
 }
@@ -33,12 +33,12 @@
     cursor: col-resize;
 }
 
-.flex-layout__panel:first-child>.flex-layout__resizer_orient_horiz
+.flex-layout__pane:first-child>.flex-layout__resizer_orient_horiz
 {
     left: 100%;
 }
 
-.flex-layout_mode_primary>.flex-layout__panel>.flex-layout__resizer
+.flex-layout__pane_hidden_yes>.flex-layout__resizer
 {
     visibility: hidden;
 }

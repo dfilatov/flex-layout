@@ -1,8 +1,8 @@
-block flex-layout, elem collapser {
+block flex-layout, elem toggler {
     default: {
         (this.ctx.mods || (this.ctx.mods = {})).orient = this.orient;
         applyNext();
     }
 
-    content: applyCtx({ elem : 'collapser-i' })
+    content: applyCtx({ elem : 'toggler-i' })
 }
