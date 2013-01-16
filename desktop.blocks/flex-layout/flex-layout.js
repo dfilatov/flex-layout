@@ -120,7 +120,7 @@ BEM.DOM.decl('flex-layout', {
         return this;
     },
 
-    _recalcPanels : function(parentSizes) {
+    _recalcPanes : function(parentSizes) {
         var _this = this,
             props = _this._getCalcProps(),
             fullSize = parentSizes[props.size],
@@ -142,7 +142,7 @@ BEM.DOM.decl('flex-layout', {
                 hidden = _this._isSecondaryHidden && kind === 'secondary';
 
             if(pane.childLayout && !hidden) {
-                res = res.concat(pane.childLayout._recalcPanels(
+                res = res.concat(pane.childLayout._recalcPanes(
                     props.size === 'height'?
                         { width : parentSizes.width, height : size } :
                         { width : size, height : parentSizes.height }));
